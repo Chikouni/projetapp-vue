@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header>
-      <span>Vue.js PWA</span>
+      <span>WIS Vue.JS projet app</span>
     </header>
     <main>
       <img src="./assets/logo.png" alt="Vue.js PWA">
@@ -39,6 +39,7 @@ header {
   padding: 0 16px 0 24px;
   background-color: #35495E;
   color: #ffffff;
+  text-align: center;
 }
 
 header span {
