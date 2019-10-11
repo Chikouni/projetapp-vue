@@ -10,8 +10,7 @@
       :class="{ today : info.fields.date === currentDate }"
       border-variant="dark"
       align="center"
-      v-bind:footer="info.fields.date | format "
-      >
+      v-bind:footer="info.fields.date | format "> 
       <b-card-text>
         <p>
           <span class='fieldInfo'>Adresse :</span>
@@ -50,7 +49,7 @@ export default{
     return {
       infos: [],
       currentDate: moment().format('YYYY-MM-DD'), // Get date of the day and format
-      search: ''
+      search: '' // Default string search for the filter
     }
   },
   mounted () {
@@ -68,7 +67,7 @@ export default{
       var matcher = new RegExp(this.search, 'i')
       return this.infos.filter(function (info) {
         return matcher.test(info.fields.lieu_quartier)
-      })
+      }) // Use filter by hood
     }
   }
 }
