@@ -1,7 +1,8 @@
 <template>
   <div class="hello" id="app">
     <div class="container">
-    <b-card v-for="info in infos"
+    <b-form-input v-model="search" placeholder="Rechercher par quartier" class="mt-3 mb-3 searchbar"></b-form-input>
+    <b-card v-for="info in filteredEvent"
       style="max-width: 30rem;"
       class="mb-2"
       v-bind:img-src="info.fields.media_1"
@@ -9,23 +10,26 @@
       :class="{ today : info.fields.date === currentDate }"
       border-variant="dark"
       align="center"
-      footer="Ah"
+      v-bind:footer="info.fields.date | format "
       >
       <b-card-text>
         <p>
           <span class='fieldInfo'>Adresse :</span>
            {{ info.fields.adresse }} {{  info.fields.code_postal }} {{  info.fields.ville }}
         </p>
-        <p>
-          <span class='fieldInfo'>Date :</span>
-          {{ info.fields.date | format }}
-        </p>
-        <p v-if='fullInfo'>
-          <span class='fieldInfo'>Places :</span>
+        <b-collapse v-bind:id="'collapse' + info.fields.id_manif">
+          <p><span class='fieldInfo'>Places :</span>
           <span v-if='info.fields.precisions_tarifs'>{{ info.fields.precisions_tarifs }}</span>
           <span v-else>Gratuit</span>
-        </p>
-        <b-button v-on:click='fullInfo = !fullInfo'>Afficher toute les infos</b-button>
+          </p>
+          <p>
+            <span class='fieldInfo'>Quartier :</span>
+            {{ info.fields.lieu_quartier }}
+          </p>
+        </b-collapse>
+        <b-button v-b-toggle="'collapse' + info.fields.id_manif" class="mt-3">
+          <span class="when-opened">Fermer</span><span class="when-closed">En savoir plus</span>
+        </b-button>
       </b-card-text>
     </b-card>
 </div>
@@ -44,9 +48,9 @@ export default{
   el: '#app',
   data () {
     return {
-      infos: null,
+      infos: [],
       currentDate: moment().format('YYYY-MM-DD'), // Get date of the day and format
-      fullInfo: false // Bool for toggle full informations
+      search: ''
     }
   },
   mounted () {
@@ -58,6 +62,14 @@ export default{
     format: function (value) {
       return moment(value).format('dddd LL')
     }
+  },
+  computed: {
+    filteredEvent: function () {
+      var matcher = new RegExp(this.search, 'i')
+      return this.infos.filter(function (info) {
+        return matcher.test(info.fields.lieu_quartier)
+      })
+    }
   }
 }
 </script>
@@ -66,7 +78,18 @@ export default{
 .card.today{
   border: #4db12c solid 5px;
 }
+.card{
+  margin: auto;
+}
 span.fieldInfo{
   font-weight: 600;
+}
+.collapsed > .when-opened,
+:not(.collapsed) > .when-closed {
+  display: none;
+}
+.searchbar{
+  margin: auto;
+  max-width: 30rem;
 }
 </style>
